@@ -1,0 +1,16 @@
+<div class="page-header">
+  <h1>Event#Show</h1>
+</div>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= eventsPath() %>" class="btn btn-info">Back to all Events</a></li>
+  <li><a href="<%= editEventPath({ event_id: event.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= eventPath({ event_id: event.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <strong>Name</strong>: <%= event.Name %>
+</p>
+<p>
+  <strong>Date</strong>: <%= event.Date %>
+</p>
