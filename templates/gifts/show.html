@@ -1,0 +1,25 @@
+<div class="page-header">
+  <h1>Gift#Show</h1>
+</div>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= giftsPath() %>" class="btn btn-info">Back to all Gifts</a></li>
+  <li><a href="<%= editGiftPath({ gift_id: gift.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= giftPath({ gift_id: gift.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <strong>Name</strong>: <%= gift.Name %>
+</p>
+<p>
+  <strong>Price</strong>: <%= gift.Price %>
+</p>
+<p>
+  <strong>Url</strong>: <%= gift.Url %>
+</p>
+<p>
+  <strong>PersonID</strong>: <%= gift.PersonID %>
+</p>
+<p>
+  <strong>EventID</strong>: <%= gift.EventID %>
+</p>

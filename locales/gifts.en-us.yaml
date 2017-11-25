@@ -1,0 +1,6 @@
+- id: "gift.created.success"
+  translation: "Gift was successfully created."
+- id: "gift.updated.success"
+  translation: "Gift was successfully updated."
+- id: "gift.destroyed.success"
+  translation: "Gift was successfully destroyed."

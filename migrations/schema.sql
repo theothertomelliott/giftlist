@@ -50,6 +50,24 @@ CREATE TABLE events (
 ALTER TABLE events OWNER TO postgres;
 
 --
+-- Name: gifts; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE gifts (
+    id uuid NOT NULL,
+    name character varying(255) NOT NULL,
+    price character varying(255) NOT NULL,
+    url character varying(255) NOT NULL,
+    person_id uuid NOT NULL,
+    event_id uuid NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE gifts OWNER TO postgres;
+
+--
 -- Name: people; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -80,6 +98,14 @@ ALTER TABLE schema_migration OWNER TO postgres;
 
 ALTER TABLE ONLY events
     ADD CONSTRAINT events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: gifts gifts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY gifts
+    ADD CONSTRAINT gifts_pkey PRIMARY KEY (id);
 
 
 --
