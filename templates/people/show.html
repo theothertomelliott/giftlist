@@ -1,0 +1,13 @@
+<div class="page-header">
+  <h1>Person#Show</h1>
+</div>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= peoplePath() %>" class="btn btn-info">Back to all Persons</a></li>
+  <li><a href="<%= editPersonPath({ person_id: person.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= personPath({ person_id: person.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <strong>Name</strong>: <%= person.Name %>
+</p>
