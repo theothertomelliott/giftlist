@@ -14,3 +14,37 @@
 <p>
   <strong>Date</strong>: <%= event.Date %>
 </p>
+
+<div class="page-header">
+  <h2>Gifts</h2>
+</div>
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= newGiftsPath() %>?event_id=<%= event.ID %>" class="btn btn-primary">Create New Gift</a></li>
+</ul>
+
+<table class="table table-striped">
+  <thead>
+  <th>Name</th>
+    <th>Price</th>
+    <th>Url</th>
+    <th>Person</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (gift) in gifts { %>
+      <tr>
+      <td><%= gift.Name %></td>
+        <td><%= gift.Price %></td>
+        <td><%= gift.Url %></td>
+        <td><%= gift.Person.Name %></td>
+        <td>
+          <div class="pull-right">
+            <a href="<%= giftPath({ gift_id: gift.ID }) %>" class="btn btn-info">View</a>
+            <a href="<%= editGiftPath({ gift_id: gift.ID }) %>" class="btn btn-warning">Edit</a>
+            <a href="<%= giftPath({ gift_id: gift.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>

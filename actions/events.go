@@ -67,6 +67,18 @@ func (v EventsResource) Show(c buffalo.Context) error {
 	// Make event available inside the html template
 	c.Set("event", event)
 
+	// Retrieve all Gifts from the DB
+	gifts := models.Gifts{}
+	if err := tx.Where("event_id = ?", event.ID).All(&gifts); err != nil {
+		return errors.WithStack(err)
+	}
+	giftsWithRelations, err := getGiftWithRelations(tx, gifts...)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	// Make Gifts available inside the html template
+	c.Set("gifts", giftsWithRelations)
+
 	return c.Render(200, r.HTML("events/show.html"))
 }
 
