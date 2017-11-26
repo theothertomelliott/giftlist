@@ -1,0 +1,35 @@
+<div class="page-header">
+  <h1>Budgets</h1>
+</div>
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= newBudgetsPath() %>" class="btn btn-primary">Create New Budget</a></li>
+</ul>
+
+<table class="table table-striped">
+  <thead>
+  <th>Maximum</th>
+    <th>PersonID</th>
+    <th>EventID</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (budget) in budgets { %>
+      <tr>
+      <td><%= budget.Maximum %></td>
+        <td><%= budget.PersonID %></td>
+        <td><%= budget.EventID %></td>
+        <td>
+          <div class="pull-right">
+            <a href="<%= budgetPath({ budget_id: budget.ID }) %>" class="btn btn-info">View</a>
+            <a href="<%= editBudgetPath({ budget_id: budget.ID }) %>" class="btn btn-warning">Edit</a>
+            <a href="<%= budgetPath({ budget_id: budget.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>

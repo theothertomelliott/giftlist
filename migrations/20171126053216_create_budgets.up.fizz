@@ -1,0 +1,6 @@
+create_table("budgets", func(t) {
+	t.Column("id", "uuid", {"primary": true})
+	t.Column("maximum", "bigint", {})
+	t.Column("person_id", "uuid", {})
+	t.Column("event_id", "uuid", {})
+})

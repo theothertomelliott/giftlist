@@ -35,6 +35,22 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: budgets; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE budgets (
+    id uuid NOT NULL,
+    maximum bigint NOT NULL,
+    person_id uuid NOT NULL,
+    event_id uuid NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE budgets OWNER TO postgres;
+
+--
 -- Name: events; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -91,6 +107,14 @@ CREATE TABLE schema_migration (
 
 
 ALTER TABLE schema_migration OWNER TO postgres;
+
+--
+-- Name: budgets budgets_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY budgets
+    ADD CONSTRAINT budgets_pkey PRIMARY KEY (id);
+
 
 --
 -- Name: events events_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres

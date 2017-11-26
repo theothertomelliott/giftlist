@@ -1,0 +1,19 @@
+<div class="page-header">
+  <h1>Budget#Show</h1>
+</div>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= budgetsPath() %>" class="btn btn-info">Back to all Budgets</a></li>
+  <li><a href="<%= editBudgetPath({ budget_id: budget.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= budgetPath({ budget_id: budget.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <strong>Maximum</strong>: <%= budget.Maximum %>
+</p>
+<p>
+  <strong>PersonID</strong>: <%= budget.PersonID %>
+</p>
+<p>
+  <strong>EventID</strong>: <%= budget.EventID %>
+</p>
