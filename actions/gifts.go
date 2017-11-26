@@ -4,6 +4,7 @@ import (
 	"github.com/gobuffalo/buffalo"
 	"github.com/markbates/pop"
 	"github.com/pkg/errors"
+	"github.com/satori/go.uuid"
 	"github.com/theothertomelliott/giftlist/models"
 )
 
@@ -89,8 +90,15 @@ func (v GiftsResource) Show(c buffalo.Context) error {
 // New renders the form for creating a new Gift.
 // This function is mapped to the path GET /gifts/new
 func (v GiftsResource) New(c buffalo.Context) error {
+	gift := &models.Gift{}
+	if c.Param("event_id") != "" {
+		var err error
+		if gift.EventID, err = uuid.FromString(c.Param("event_id")); err != nil {
+			return errors.WithStack(err)
+		}
+	}
 	// Make gift available inside the html template
-	c.Set("gift", &models.Gift{})
+	c.Set("gift", gift)
 
 	// Get a db connection and make the people map available
 	tx := c.Value("tx").(*pop.Connection)
