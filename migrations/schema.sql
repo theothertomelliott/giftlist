@@ -72,7 +72,7 @@ ALTER TABLE events OWNER TO postgres;
 CREATE TABLE gifts (
     id uuid NOT NULL,
     name character varying(255) NOT NULL,
-    price character varying(255) NOT NULL,
+    price bigint NOT NULL,
     url character varying(255) NOT NULL,
     person_id uuid NOT NULL,
     event_id uuid NOT NULL,

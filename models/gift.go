@@ -15,7 +15,7 @@ type Gift struct {
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
 	Name      string    `json:"name" db:"name"`
-	Price     string    `json:"price" db:"price"`
+	Price     int64     `json:"price" db:"price"`
 	Url       string    `json:"url" db:"url"`
 	PersonID  uuid.UUID `json:"person_id" db:"person_id"`
 	EventID   uuid.UUID `json:"event_id" db:"event_id"`
@@ -41,7 +41,6 @@ func (g Gifts) String() string {
 func (g *Gift) Validate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.Validate(
 		&validators.StringIsPresent{Field: g.Name, Name: "Name"},
-		&validators.StringIsPresent{Field: g.Price, Name: "Price"},
 		&validators.StringIsPresent{Field: g.Url, Name: "Url"},
 	), nil
 }
