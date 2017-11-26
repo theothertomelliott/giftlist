@@ -24,25 +24,55 @@ type GiftsResource struct {
 	buffalo.Resource
 }
 
+type GiftWithRelations struct {
+	models.Gift
+	Person *models.Person
+	Event  *models.Event
+}
+
 // List gets all Gifts. This function is mapped to the path
 // GET /gifts
 func (v GiftsResource) List(c buffalo.Context) error {
 	// Get the DB connection from the context
 	tx := c.Value("tx").(*pop.Connection)
 
-	gifts := &models.Gifts{}
+	gifts := models.Gifts{}
 
 	// Paginate results. Params "page" and "per_page" control pagination.
 	// Default values are "page=1" and "per_page=20".
 	q := tx.PaginateFromParams(c.Params())
 
 	// Retrieve all Gifts from the DB
-	if err := q.All(gifts); err != nil {
+	if err := q.All(&gifts); err != nil {
 		return errors.WithStack(err)
 	}
 
+	var giftsWithRelations = make([]GiftWithRelations, 0, len(gifts))
+	for _, gift := range gifts {
+		// Obtain associated Event
+		event := &models.Event{}
+		if err := tx.Find(event, gift.EventID); err != nil {
+			return c.Error(404, err)
+		}
+
+		// Obtain associated Person
+		person := &models.Person{}
+		if err := tx.Find(person, gift.PersonID); err != nil {
+			return c.Error(404, err)
+		}
+
+		giftsWithRelations = append(
+			giftsWithRelations,
+			GiftWithRelations{
+				Gift:   gift,
+				Event:  event,
+				Person: person,
+			},
+		)
+	}
+
 	// Make Gifts available inside the html template
-	c.Set("gifts", gifts)
+	c.Set("gifts", giftsWithRelations)
 
 	// Add the paginator to the context so it can be used in the template.
 	c.Set("pagination", q.Paginator)
@@ -83,6 +113,12 @@ func (v GiftsResource) New(c buffalo.Context) error {
 		return c.Error(404, err)
 	}
 	c.Set("people", people)
+	// Make the events map available to templates
+	events, err := buildEventsMap(tx)
+	if err != nil {
+		return c.Error(404, err)
+	}
+	c.Set("events", events)
 
 	return c.Render(200, r.HTML("gifts/new.html"))
 }
@@ -148,6 +184,12 @@ func (v GiftsResource) Edit(c buffalo.Context) error {
 		return c.Error(404, err)
 	}
 	c.Set("people", people)
+	// Make the events map available to templates
+	events, err := buildEventsMap(tx)
+	if err != nil {
+		return c.Error(404, err)
+	}
+	c.Set("events", events)
 
 	return c.Render(200, r.HTML("gifts/edit.html"))
 }

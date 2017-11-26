@@ -10,8 +10,8 @@
   <th>Name</th>
     <th>Price</th>
     <th>Url</th>
-    <th>PersonID</th>
-    <th>EventID</th>
+    <th>Person</th>
+    <th>Event</th>
     <th>&nbsp;</th>
   </thead>
   <tbody>
@@ -20,8 +20,8 @@
       <td><%= gift.Name %></td>
         <td><%= gift.Price %></td>
         <td><%= gift.Url %></td>
-        <td><%= gift.PersonID %></td>
-        <td><%= gift.EventID %></td>
+        <td><%= gift.Person.Name %></td>
+        <td><%= gift.Event.Name %></td>
         <td>
           <div class="pull-right">
             <a href="<%= giftPath({ gift_id: gift.ID }) %>" class="btn btn-info">View</a>
