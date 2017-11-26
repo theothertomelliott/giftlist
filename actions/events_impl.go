@@ -15,7 +15,9 @@ func buildEventsMap(tx *pop.Connection) (map[string]uuid.UUID, error) {
 	if err := tx.All(events); err != nil {
 		return nil, errors.WithStack(err)
 	}
-	eventMap := make(map[string]uuid.UUID)
+	eventMap := map[string]uuid.UUID{
+		"== Choose an Event ===": uuid.Nil,
+	}
 	for _, event := range *events {
 		eventMap[event.Name] = event.ID
 	}

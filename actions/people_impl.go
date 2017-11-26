@@ -15,7 +15,9 @@ func buildPersonMap(tx *pop.Connection) (map[string]uuid.UUID, error) {
 	if err := tx.All(people); err != nil {
 		return nil, errors.WithStack(err)
 	}
-	personMap := make(map[string]uuid.UUID)
+	personMap := map[string]uuid.UUID{
+		"== Choose a Person ===": uuid.Nil,
+	}
 	for _, person := range *people {
 		personMap[person.Name] = person.ID
 	}
