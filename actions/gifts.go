@@ -47,28 +47,9 @@ func (v GiftsResource) List(c buffalo.Context) error {
 		return errors.WithStack(err)
 	}
 
-	var giftsWithRelations = make([]GiftWithRelations, 0, len(gifts))
-	for _, gift := range gifts {
-		// Obtain associated Event
-		event := &models.Event{}
-		if err := tx.Find(event, gift.EventID); err != nil {
-			return c.Error(404, err)
-		}
-
-		// Obtain associated Person
-		person := &models.Person{}
-		if err := tx.Find(person, gift.PersonID); err != nil {
-			return c.Error(404, err)
-		}
-
-		giftsWithRelations = append(
-			giftsWithRelations,
-			GiftWithRelations{
-				Gift:   gift,
-				Event:  event,
-				Person: person,
-			},
-		)
+	giftsWithRelations, err := getGiftWithRelations(tx, gifts...)
+	if err != nil {
+		return errors.WithStack(err)
 	}
 
 	// Make Gifts available inside the html template
@@ -94,8 +75,13 @@ func (v GiftsResource) Show(c buffalo.Context) error {
 		return c.Error(404, err)
 	}
 
+	giftsWithRelations, err := getGiftWithRelations(tx, *gift)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
 	// Make gift available inside the html template
-	c.Set("gift", gift)
+	c.Set("gift", giftsWithRelations[0])
 
 	return c.Render(200, r.HTML("gifts/show.html"))
 }
