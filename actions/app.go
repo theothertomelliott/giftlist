@@ -55,6 +55,7 @@ func App() *buffalo.App {
 		app.Use(T.Middleware())
 
 		app.GET("/", HomeHandler)
+		app.GET("/routes", RoutesHandler)
 
 		app.ServeFiles("/assets", assetsBox)
 		app.Resource("/events", EventsResource{&buffalo.BaseResource{}})
