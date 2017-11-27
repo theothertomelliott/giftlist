@@ -22,8 +22,10 @@
 
 <h3>Budget</h3>
 
+<p><strong>Total Spent:</strong> <%= person.TotalSpent() %></p>
 <%= if (person.HasBudget()) { %>
-  <%= person.Budget.Maximum %>
+  <p><strong>Total Budget:</strong> <%= person.Budget.Maximum %></p>
+  <p><strong>Remaining:</strong> <%= person.Remaining() %></p>
 <% } else { %>
   <p>No budget</p>
 <% } %>

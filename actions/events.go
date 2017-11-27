@@ -35,6 +35,22 @@ func (p PersonForEvent) HasBudget() bool {
 	return p.Budget != nil
 }
 
+func (p PersonForEvent) TotalSpent() int64 {
+	var total int64 = 0
+	for _, gift := range p.Gifts {
+		total += gift.Price
+	}
+	return total
+}
+
+func (p PersonForEvent) Remaining() int64 {
+	if p.Budget == nil {
+		return 0
+	}
+
+	return p.Budget.Maximum - p.TotalSpent()
+}
+
 // List gets all Events. This function is mapped to the path
 // GET /events
 func (v EventsResource) List(c buffalo.Context) error {
