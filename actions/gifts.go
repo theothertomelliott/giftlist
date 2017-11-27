@@ -97,6 +97,12 @@ func (v GiftsResource) New(c buffalo.Context) error {
 			return errors.WithStack(err)
 		}
 	}
+	if c.Param("person_id") != "" {
+		var err error
+		if gift.PersonID, err = uuid.FromString(c.Param("person_id")); err != nil {
+			return errors.WithStack(err)
+		}
+	}
 	// Make gift available inside the html template
 	c.Set("gift", gift)
 
