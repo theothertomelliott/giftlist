@@ -15,28 +15,39 @@
   <strong>Date</strong>: <%= event.Date %>
 </p>
 
+<%= for (person) in people { %>
 <div class="page-header">
-  <h2>Gifts</h2>
+  <h1><%= person.Name %></h1>
 </div>
+
+<h3>Budget</h3>
+
+<%= if (person.HasBudget()) { %>
+  <%= person.Budget.Maximum %>
+<% } else { %>
+  <p>No budget</p>
+<% } %>
+
+<h3>Gifts</h3>
+
 <ul class="list-unstyled list-inline">
-  <li><a href="<%= newGiftsPath() %>?event_id=<%= event.ID %>" class="btn btn-primary">Create New Gift</a></li>
+  <li><a href="<%= newGiftsPath() %>?event_id=<%= event.ID %>&person_id=<%= person.ID %>" class="btn btn-primary">Create New Gift</a></li>
 </ul>
 
+<%= if (len(person.Gifts) > 0) { %>
 <table class="table table-striped">
   <thead>
   <th>Name</th>
     <th>Price</th>
     <th>Url</th>
-    <th>Person</th>
     <th>&nbsp;</th>
   </thead>
   <tbody>
-    <%= for (gift) in gifts { %>
+    <%= for (gift) in person.Gifts { %>
       <tr>
       <td><%= gift.Name %></td>
         <td><%= gift.Price %></td>
         <td><%= gift.Url %></td>
-        <td><%= gift.Person.Name %></td>
         <td>
           <div class="pull-right">
             <a href="<%= giftPath({ gift_id: gift.ID }) %>" class="btn btn-info">View</a>
@@ -48,3 +59,8 @@
     <% } %>
   </tbody>
 </table>
+<% } else { %>
+  <p>No Gifts</p>
+<% } %>
+
+<% } %>

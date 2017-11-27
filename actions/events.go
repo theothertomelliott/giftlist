@@ -24,6 +24,17 @@ type EventsResource struct {
 	buffalo.Resource
 }
 
+type PeopleForEvent []PersonForEvent
+type PersonForEvent struct {
+	models.Person
+	Budget *models.Budget
+	Gifts  models.Gifts
+}
+
+func (p PersonForEvent) HasBudget() bool {
+	return p.Budget != nil
+}
+
 // List gets all Events. This function is mapped to the path
 // GET /events
 func (v EventsResource) List(c buffalo.Context) error {
@@ -63,21 +74,14 @@ func (v EventsResource) Show(c buffalo.Context) error {
 	if err := tx.Find(event, c.Param("event_id")); err != nil {
 		return c.Error(404, err)
 	}
-
 	// Make event available inside the html template
 	c.Set("event", event)
 
-	// Retrieve all Gifts from the DB
-	gifts := models.Gifts{}
-	if err := tx.Where("event_id = ?", event.ID).All(&gifts); err != nil {
-		return errors.WithStack(err)
-	}
-	giftsWithRelations, err := getGiftWithRelations(tx, gifts...)
+	peopleList, err := loadPeopleForEvent(tx, event)
 	if err != nil {
 		return errors.WithStack(err)
 	}
-	// Make Gifts available inside the html template
-	c.Set("gifts", giftsWithRelations)
+	c.Set("people", peopleList)
 
 	return c.Render(200, r.HTML("events/show.html"))
 }
