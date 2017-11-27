@@ -4,6 +4,7 @@ import (
 	"github.com/gobuffalo/buffalo"
 	"github.com/markbates/pop"
 	"github.com/pkg/errors"
+	uuid "github.com/satori/go.uuid"
 	"github.com/theothertomelliott/giftlist/models"
 )
 
@@ -73,8 +74,21 @@ func (v BudgetsResource) Show(c buffalo.Context) error {
 // New renders the form for creating a new Budget.
 // This function is mapped to the path GET /budgets/new
 func (v BudgetsResource) New(c buffalo.Context) error {
+	budget := &models.Budget{}
+	if c.Param("event_id") != "" {
+		var err error
+		if budget.EventID, err = uuid.FromString(c.Param("event_id")); err != nil {
+			return errors.WithStack(err)
+		}
+	}
+	if c.Param("person_id") != "" {
+		var err error
+		if budget.PersonID, err = uuid.FromString(c.Param("person_id")); err != nil {
+			return errors.WithStack(err)
+		}
+	}
 	// Make budget available inside the html template
-	c.Set("budget", &models.Budget{})
+	c.Set("budget", budget)
 
 	// Get a db connection and make the people map available
 	tx := c.Value("tx").(*pop.Connection)

@@ -26,8 +26,11 @@
 <%= if (person.HasBudget()) { %>
   <p><strong>Total Budget:</strong> <%= person.Budget.Maximum %></p>
   <p><strong>Remaining:</strong> <%= person.Remaining() %></p>
+  <a href="<%= editBudgetPath({ budget_id: person.Budget.ID })%>" class="btn btn-warning">Edit Budget</a>
+  <a href="<%= budgetPath({ budget_id: person.Budget.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Remove Budget</a>
 <% } else { %>
   <p>No budget</p>
+  <a href="<%= newBudgetsPath() %>?event_id=<%= event.ID %>&person_id=<%= person.ID %>" class="btn btn-primary">Set Budget</a>
 <% } %>
 
 <h3>Gifts</h3>
