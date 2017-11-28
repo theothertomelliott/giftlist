@@ -58,17 +58,18 @@ func App() *buffalo.App {
 		app.GET("/", HomeHandler)
 		app.GET("/routes", RoutesHandler)
 
-		app.ServeFiles("/assets", assetsBox)
-		app.Resource("/events", EventsResource{&buffalo.BaseResource{}}).Use(Authorize)
-		app.Resource("/people", PeopleResource{&buffalo.BaseResource{}}).Use(Authorize)
-		app.Resource("/gifts", GiftsResource{&buffalo.BaseResource{}}).Use(Authorize)
-		app.Resource("/budgets", BudgetsResource{&buffalo.BaseResource{}}).Use(Authorize)
-
 		app.GET("/users/new", UsersNew)
 		app.POST("/users", UsersCreate)
 		app.GET("/signin", AuthNew)
 		app.POST("/signin", AuthCreate)
 		app.DELETE("/signout", AuthDestroy)
+
+		app.Resource("/events", EventsResource{&buffalo.BaseResource{}}).Use(Authorize)
+		app.Resource("/people", PeopleResource{&buffalo.BaseResource{}}).Use(Authorize)
+		app.Resource("/gifts", GiftsResource{&buffalo.BaseResource{}}).Use(Authorize)
+		app.Resource("/budgets", BudgetsResource{&buffalo.BaseResource{}}).Use(Authorize)
+
+		app.ServeFiles("/assets", assetsBox)
 	}
 
 	return app
