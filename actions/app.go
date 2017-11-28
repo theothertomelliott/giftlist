@@ -46,6 +46,7 @@ func App() *buffalo.App {
 		//  c.Value("tx").(*pop.PopTransaction)
 		// Remove to disable this.
 		app.Use(middleware.PopTransaction(models.DB))
+		app.Use(SetCurrentUser)
 
 		// Setup and use translations:
 		var err error
@@ -62,6 +63,12 @@ func App() *buffalo.App {
 		app.Resource("/people", PeopleResource{&buffalo.BaseResource{}})
 		app.Resource("/gifts", GiftsResource{&buffalo.BaseResource{}})
 		app.Resource("/budgets", BudgetsResource{&buffalo.BaseResource{}})
+
+		app.GET("/users/new", UsersNew)
+		app.POST("/users", UsersCreate)
+		app.GET("/signin", AuthNew)
+		app.POST("/signin", AuthCreate)
+		app.DELETE("/signout", AuthDestroy)
 	}
 
 	return app

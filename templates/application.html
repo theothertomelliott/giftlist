@@ -28,7 +28,13 @@
               </ul>
               
               <ul class="nav navbar-nav navbar-right">
-                  <!-- TODO: Add user info -->
+                  <%= if (current_user) { %>
+                    <li><p class="navbar-text"><%= current_user.Email %></p></li>
+                    <li><a href="/signout" data-method="DELETE">Sign Out</a></li>
+                  <% } else { %>
+                    <li><a href="/signin">Sign In</a></li>
+                    <li><a href="/users/new">Register</a></li>
+                  <% } %>
               </ul>
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
