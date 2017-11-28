@@ -1,31 +1,48 @@
 <div class="page-header">
-  <h1><%= event.Name %> (<%= event.Date %>)</h1>
+  <h1><%= event.Name %> <small><%= event.Date %></small></h1>
 </div>
 
-<ul class="list-unstyled list-inline">
-  <li><a href="<%= eventsPath() %>" class="btn btn-info">Back to all Events</a></li>
-  <li><a href="<%= editEventPath({ event_id: event.ID })%>" class="btn btn-warning">Edit</a></li>
-  <li><a href="<%= eventPath({ event_id: event.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
-</ul>
-
-<h3>People</h3>
-
-<ul>
-    <%= for (person) in people { %>
-      <li><a href="#person-<%= person.ID %>"><%= person.Name %></a></li>
-    <% } %>
-</ul>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">People<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                  <%= for (person) in people { %>
+                    <li>  
+                      <a href="#person-<%= person.ID %>">
+                        <%= person.Name %>
+                      </a>
+                    </li>
+                  <% } %>
+              </ul>
+            </li>
+        </ul>
+        
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="<%= editEventPath({ event_id: event.ID })%>">
+                Edit
+              </a></li>
+              <li><a href="<%= eventPath({ event_id: event.ID })%>" data-method="DELETE" data-confirm="Are you sure?">
+                Delete
+              </a></li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
 
 <%= for (person) in people { %>
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <a id="person-<%= person.ID %>" name="person-<%= person.ID %>"></a>
-    <h1><%= person.Name %></h1>
-  </div>
-<div class="panel-body">
-<table class="table table-striped">
+<a id="person-<%= person.ID %>" name="person-<%= person.ID %>"></a>
+<h1><%= person.Name %></h1>
+
+<table class="table table-bordered">
   <thead>
-  <th>Name</th>
+    <tr class="active">
+    <th>Name</th>
     <th>Url</th>
     <th class="text-right">Price</th>
     <th class="text-right">
@@ -33,6 +50,7 @@
         Add Gift
       </a>
     </th>
+    </tr>
   </thead>
   <tbody>
     <%= if (len(person.Gifts) == 0) { %>
@@ -86,7 +104,7 @@
         <td>&nbsp;</td>      
       </tr>
     <% } else { %>
-      <tr>
+      <tr class="active">
           <td>&nbsp;</td>
           <td>&nbsp;</td>
           <td class="text-right">
@@ -101,7 +119,4 @@
     <% } %>
   </tfoot>
 </table>
-
-</div>
-</div>
 <% } %>
