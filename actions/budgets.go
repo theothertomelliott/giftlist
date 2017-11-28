@@ -142,7 +142,9 @@ func (v BudgetsResource) Create(c buffalo.Context) error {
 	// If there are no errors set a success message
 	c.Flash().Add("success", "Budget was created successfully")
 
-	// and redirect to the budgets index page
+	if budget.EventID != uuid.Nil {
+		return c.Redirect(302, "/events/%s#budget-%s", budget.EventID, budget.ID)
+	}
 	return c.Redirect(302, "/budgets/%s", budget.ID)
 }
 
@@ -216,7 +218,9 @@ func (v BudgetsResource) Update(c buffalo.Context) error {
 	// If there are no errors set a success message
 	c.Flash().Add("success", "Budget was updated successfully")
 
-	// and redirect to the budgets index page
+	if budget.EventID != uuid.Nil {
+		return c.Redirect(302, "/events/%s#budget-%s", budget.EventID, budget.ID)
+	}
 	return c.Redirect(302, "/budgets/%s", budget.ID)
 }
 
@@ -241,6 +245,8 @@ func (v BudgetsResource) Destroy(c buffalo.Context) error {
 	// If there are no errors set a flash message
 	c.Flash().Add("success", "Budget was destroyed successfully")
 
-	// Redirect to the budgets index page
+	if budget.EventID != uuid.Nil {
+		return c.Redirect(302, "/events/%s", budget.EventID)
+	}
 	return c.Redirect(302, "/budgets")
 }

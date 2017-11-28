@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h1>Event#Show</h1>
+  <h1><%= event.Name %> (<%= event.Date %>)</h1>
 </div>
 
 <ul class="list-unstyled list-inline">
@@ -8,64 +8,100 @@
   <li><a href="<%= eventPath({ event_id: event.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
 </ul>
 
-<p>
-  <strong>Name</strong>: <%= event.Name %>
-</p>
-<p>
-  <strong>Date</strong>: <%= event.Date %>
-</p>
+<h3>People</h3>
 
-<%= for (person) in people { %>
-<div class="page-header">
-  <h1><%= person.Name %></h1>
-</div>
-
-<h3>Budget</h3>
-
-<p><strong>Total Spent:</strong> <%= person.TotalSpent() %></p>
-<%= if (person.HasBudget()) { %>
-  <p><strong>Total Budget:</strong> <%= person.Budget.Maximum %></p>
-  <p><strong>Remaining:</strong> <%= person.Remaining() %></p>
-  <a href="<%= editBudgetPath({ budget_id: person.Budget.ID })%>" class="btn btn-warning">Edit Budget</a>
-  <a href="<%= budgetPath({ budget_id: person.Budget.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Remove Budget</a>
-<% } else { %>
-  <p>No budget</p>
-  <a href="<%= newBudgetsPath() %>?event_id=<%= event.ID %>&person_id=<%= person.ID %>" class="btn btn-primary">Set Budget</a>
-<% } %>
-
-<h3>Gifts</h3>
-
-<ul class="list-unstyled list-inline">
-  <li><a href="<%= newGiftsPath() %>?event_id=<%= event.ID %>&person_id=<%= person.ID %>" class="btn btn-primary">Create New Gift</a></li>
+<ul>
+    <%= for (person) in people { %>
+      <li><a href="#person-<%= person.ID %>"><%= person.Name %></a></li>
+    <% } %>
 </ul>
 
-<%= if (len(person.Gifts) > 0) { %>
+<%= for (person) in people { %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <a id="person-<%= person.ID %>" name="person-<%= person.ID %>"></a>
+    <h1><%= person.Name %></h1>
+  </div>
+<div class="panel-body">
 <table class="table table-striped">
   <thead>
   <th>Name</th>
-    <th>Price</th>
     <th>Url</th>
-    <th>&nbsp;</th>
+    <th class="text-right">Price</th>
+    <th class="text-right">
+      <a href="<%= newGiftsPath() %>?event_id=<%= event.ID %>&person_id=<%= person.ID %>" class="btn btn-primary">
+        Add Gift
+      </a>
+    </th>
   </thead>
   <tbody>
+    <%= if (len(person.Gifts) == 0) { %>
+      <tr>
+          <td class="text-center" colspan="4">
+            <em>No gifts</em>
+          </td>
+      </tr>
+    <% } %>
     <%= for (gift) in person.Gifts { %>
       <tr>
-      <td><%= gift.Name %></td>
-        <td><%= gift.Price %></td>
+      <td>
+        <a id="gift-<%= gift.ID %>" name="gift-<%= gift.ID %>"></a>
+        <%= gift.Name %>
+      </td>
         <td><%= gift.Url %></td>
+        <td class="text-right"><%= gift.Price %></td>
         <td>
           <div class="pull-right">
             <a href="<%= giftPath({ gift_id: gift.ID }) %>" class="btn btn-info">View</a>
             <a href="<%= editGiftPath({ gift_id: gift.ID }) %>" class="btn btn-warning">Edit</a>
-            <a href="<%= giftPath({ gift_id: gift.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+            <a href="<%= giftPath({ gift_id: gift.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Delete</a>
           </div>
         </td>
       </tr>
     <% } %>
   </tbody>
+  <tfoot>
+    <tr>
+      <td>&nbsp;</td>
+      <th id="total">Total :</th>
+      <td class="text-right"><%= person.TotalSpent() %></td>
+      <td>&nbsp;</td>      
+    </tr>
+    <%= if (person.HasBudget()) { %>
+      <tr>
+        <td>&nbsp;</td>
+        <th id="total">Budget :</th>
+        <td class="text-right"> <%= person.Budget.Maximum %></td>
+        <td>
+          <div class="pull-right">
+            <a href="<%= editBudgetPath({ budget_id: person.Budget.ID })%>" class="btn btn-warning">Edit Budget</a>
+            <a href="<%= budgetPath({ budget_id: person.Budget.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Remove Budget</a>  
+          </div>
+        </td>      
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <th id="total">Remaining :</th>
+        <td class="text-right"> <%= person.Remaining() %></td>
+        <td>&nbsp;</td>      
+      </tr>
+    <% } else { %>
+      <tr>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td class="text-right">
+              <div class="pull-right">
+                  <a href="<%= newBudgetsPath() %>?event_id=<%= event.ID %>&person_id=<%= person.ID %>" class="btn btn-primary">Set Budget</a>
+              </div>
+          </td>
+          <td>
+            &nbsp;
+          </td>      
+        </tr>
+    <% } %>
+  </tfoot>
 </table>
-<% } else { %>
-  <p>No Gifts</p>
-<% } %>
 
+</div>
+</div>
 <% } %>

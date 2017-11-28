@@ -158,7 +158,10 @@ func (v GiftsResource) Create(c buffalo.Context) error {
 	// If there are no errors set a success message
 	c.Flash().Add("success", "Gift was created successfully")
 
-	// and redirect to the gifts index page
+	// and redirect to the associated event show page if appropriate or the gifts index page
+	if gift.EventID != uuid.Nil {
+		return c.Redirect(302, "/events/%s#gift-%s", gift.EventID, gift.ID)
+	}
 	return c.Redirect(302, "/gifts/%s", gift.ID)
 }
 
@@ -232,7 +235,10 @@ func (v GiftsResource) Update(c buffalo.Context) error {
 	// If there are no errors set a success message
 	c.Flash().Add("success", "Gift was updated successfully")
 
-	// and redirect to the gifts index page
+	// and redirect to the associated event show page if appropriate or the gifts index page
+	if gift.EventID != uuid.Nil {
+		return c.Redirect(302, "/events/%s#gift-%s", gift.EventID, gift.ID)
+	}
 	return c.Redirect(302, "/gifts/%s", gift.ID)
 }
 
@@ -257,6 +263,9 @@ func (v GiftsResource) Destroy(c buffalo.Context) error {
 	// If there are no errors set a flash message
 	c.Flash().Add("success", "Gift was destroyed successfully")
 
-	// Redirect to the gifts index page
-	return c.Redirect(302, "/gifts")
+	// and redirect to the associated event show page if appropriate or the gifts index page
+	if gift.EventID != uuid.Nil {
+		return c.Redirect(302, "/events/%s", gift.EventID)
+	}
+	return c.Redirect(302, "/gifts", gift.ID)
 }

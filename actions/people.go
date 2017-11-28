@@ -114,7 +114,6 @@ func (v PeopleResource) Create(c buffalo.Context) error {
 	// If there are no errors set a success message
 	c.Flash().Add("success", "Person was created successfully")
 
-	// and redirect to the people index page
 	return c.Redirect(302, "/people/%s", person.ID)
 }
 
