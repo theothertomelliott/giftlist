@@ -33,7 +33,6 @@ func UsersCreate(c buffalo.Context) error {
 	}
 
 	c.Session().Set("current_user_id", u.ID)
-	c.Flash().Add("success", "Welcome to Buffalo!")
 
 	return c.Redirect(302, "/")
 }

@@ -59,10 +59,10 @@ func App() *buffalo.App {
 		app.GET("/routes", RoutesHandler)
 
 		app.ServeFiles("/assets", assetsBox)
-		app.Resource("/events", EventsResource{&buffalo.BaseResource{}})
-		app.Resource("/people", PeopleResource{&buffalo.BaseResource{}})
-		app.Resource("/gifts", GiftsResource{&buffalo.BaseResource{}})
-		app.Resource("/budgets", BudgetsResource{&buffalo.BaseResource{}})
+		app.Resource("/events", EventsResource{&buffalo.BaseResource{}}).Use(Authorize)
+		app.Resource("/people", PeopleResource{&buffalo.BaseResource{}}).Use(Authorize)
+		app.Resource("/gifts", GiftsResource{&buffalo.BaseResource{}}).Use(Authorize)
+		app.Resource("/budgets", BudgetsResource{&buffalo.BaseResource{}}).Use(Authorize)
 
 		app.GET("/users/new", UsersNew)
 		app.POST("/users", UsersCreate)

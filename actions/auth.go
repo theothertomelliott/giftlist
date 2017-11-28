@@ -53,7 +53,6 @@ func AuthCreate(c buffalo.Context) error {
 		return bad()
 	}
 	c.Session().Set("current_user_id", u.ID)
-	c.Flash().Add("success", "Welcome Back to Buffalo!")
 
 	return c.Redirect(302, "/")
 }
@@ -62,5 +61,5 @@ func AuthCreate(c buffalo.Context) error {
 func AuthDestroy(c buffalo.Context) error {
 	c.Session().Clear()
 	c.Flash().Add("success", "You have been logged out!")
-	return c.Redirect(302, "/")
+	return c.Redirect(302, "/signin")
 }
