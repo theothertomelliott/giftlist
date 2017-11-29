@@ -78,7 +78,8 @@ CREATE TABLE gifts (
     person_id uuid NOT NULL,
     event_id uuid NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    status character varying(255) NOT NULL
 );
 
 

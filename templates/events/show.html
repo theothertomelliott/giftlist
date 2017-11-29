@@ -44,6 +44,7 @@
     <tr class="active">
     <th>Name</th>
     <th>Url</th>
+    <th>Status</th>
     <th class="text-right">Price</th>
     <th class="text-right">
       <a href="<%= newGiftsPath() %>?event_id=<%= event.ID %>&person_id=<%= person.ID %>" class="btn btn-primary">
@@ -67,6 +68,7 @@
         <%= gift.Name %>
       </td>
         <td><%= gift.Url %></td>
+        <td><%= gift.Status %></td>
         <td class="text-right"><%= gift.Price %></td>
         <td>
           <div class="pull-right">

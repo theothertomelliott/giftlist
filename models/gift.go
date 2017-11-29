@@ -19,6 +19,7 @@ type Gift struct {
 	Url       string    `json:"url" db:"url"`
 	PersonID  uuid.UUID `json:"person_id" db:"person_id"`
 	EventID   uuid.UUID `json:"event_id" db:"event_id"`
+	Status    string    `json:"status" db:"status"`
 }
 
 // String is not required by pop and may be deleted
