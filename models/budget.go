@@ -6,16 +6,18 @@ import (
 
 	"github.com/markbates/pop"
 	"github.com/markbates/validate"
+	"github.com/pkg/errors"
 	"github.com/satori/go.uuid"
 )
 
 type Budget struct {
-	ID        uuid.UUID `json:"id" db:"id"`
-	CreatedAt time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
-	Maximum   int64     `json:"maximum" db:"maximum"`
-	PersonID  uuid.UUID `json:"person_id" db:"person_id"`
-	EventID   uuid.UUID `json:"event_id" db:"event_id"`
+	ID         uuid.UUID `json:"id" db:"id"`
+	CreatedAt  time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at" db:"updated_at"`
+	Maximum    string    `json:"-" db:"-"`
+	MaximumInt int64     `json:"maximum" db:"maximum"`
+	PersonID   uuid.UUID `json:"person_id" db:"person_id"`
+	EventID    uuid.UUID `json:"event_id" db:"event_id"`
 }
 
 // String is not required by pop and may be deleted
@@ -49,4 +51,21 @@ func (b *Budget) ValidateCreate(tx *pop.Connection) (*validate.Errors, error) {
 // This method is not required and may be deleted.
 func (b *Budget) ValidateUpdate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.NewErrors(), nil
+}
+
+func (b *Budget) AfterFind(tx *pop.Connection) error {
+	b.Maximum = RenderMoney(b.MaximumInt)
+	return nil
+}
+
+func (b *Budget) BeforeCreate(tx *pop.Connection) error {
+	var err error
+	b.MaximumInt, err = ParseMoney(b.Maximum)
+	return errors.WithStack(err)
+}
+
+func (b *Budget) BeforeSave(tx *pop.Connection) error {
+	var err error
+	b.MaximumInt, err = ParseMoney(b.Maximum)
+	return errors.WithStack(err)
 }

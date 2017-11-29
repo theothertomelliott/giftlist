@@ -35,7 +35,7 @@ func (p PersonForEvent) HasBudget() bool {
 	return p.Budget != nil
 }
 
-func (p PersonForEvent) TotalSpent() int64 {
+func (p PersonForEvent) totalSpentInt() int64 {
 	var total int64 = 0
 	for _, gift := range p.Gifts {
 		total += gift.PriceInt
@@ -43,12 +43,16 @@ func (p PersonForEvent) TotalSpent() int64 {
 	return total
 }
 
-func (p PersonForEvent) Remaining() int64 {
+func (p PersonForEvent) TotalSpent() string {
+	return models.RenderMoney(p.totalSpentInt())
+}
+
+func (p PersonForEvent) Remaining() string {
 	if p.Budget == nil {
-		return 0
+		return "0.00"
 	}
 
-	return p.Budget.Maximum - p.TotalSpent()
+	return models.RenderMoney(p.Budget.MaximumInt - p.totalSpentInt())
 }
 
 // List gets all Events. This function is mapped to the path

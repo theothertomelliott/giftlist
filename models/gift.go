@@ -2,9 +2,6 @@ package models
 
 import (
 	"encoding/json"
-	"fmt"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/markbates/pop"
@@ -63,49 +60,19 @@ func (g *Gift) ValidateUpdate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.NewErrors(), nil
 }
 
-func RenderPrice(price int64) string {
-	quotient := price / 100 // integer division, decimals are truncated
-	remainder := price % 100
-	return fmt.Sprintf("%d.%d", quotient, remainder)
-}
-
 func (u *Gift) AfterFind(tx *pop.Connection) error {
-	u.Price = RenderPrice(u.PriceInt)
+	u.Price = RenderMoney(u.PriceInt)
 	return nil
 }
 
 func (u *Gift) BeforeCreate(tx *pop.Connection) error {
-	return errors.WithStack(u.savePrice(tx))
+	var err error
+	u.PriceInt, err = ParseMoney(u.Price)
+	return errors.WithStack(err)
 }
 
 func (u *Gift) BeforeSave(tx *pop.Connection) error {
-	return errors.WithStack(u.savePrice(tx))
-}
-
-func (u *Gift) savePrice(tx *pop.Connection) error {
-
-	sep := strings.Split(u.Price, ".")
-	if len(sep) == 0 || len(sep) > 2 {
-		return errors.New("price is not a decimal")
-	}
-	high, err := strconv.Atoi(sep[0])
-	if err != nil {
-		return errors.WithStack(err)
-	}
-	low := 0
-	if len(sep) == 2 {
-		low, err = strconv.Atoi(sep[1])
-		if err != nil {
-			return errors.WithStack(err)
-		}
-		if len(sep[1]) == 1 {
-			low *= 10
-		}
-	}
-	if low >= 100 {
-		return errors.New("price is not correctly formatted")
-	}
-	u.PriceInt = int64(high*100 + low)
-
-	return nil
+	var err error
+	u.PriceInt, err = ParseMoney(u.Price)
+	return errors.WithStack(err)
 }
