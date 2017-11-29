@@ -21,8 +21,7 @@
 #  version = "2.4.0"
 
 [metadata.heroku]
-  root-package = "github.com/heroku/go-getting-started"
-  go-version = "1.9.2"
+  root-package = "github.com/theothertomelliott/giftlist"
   install = [ "./..." ]
 
 [[constraint]]
