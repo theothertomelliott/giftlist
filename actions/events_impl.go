@@ -7,11 +7,11 @@ import (
 	"github.com/theothertomelliott/giftlist/models"
 )
 
-func loadPeopleForEvent(tx *pop.Connection, event *models.Event) (PeopleForEvent, error) {
+func loadPeopleForEvent(tx *pop.Connection, currentUser uuid.UUID, event *models.Event) (PeopleForEvent, error) {
 	// Retrieve all People from the DB
 	people := &models.Persons{}
 	// Retrieve all Persons from the DB
-	if err := tx.All(people); err != nil {
+	if err := tx.Where("user_id = ?", currentUser).All(people); err != nil {
 		return nil, errors.WithStack(err)
 	}
 	var peopleMap = make(map[uuid.UUID]PersonForEvent)

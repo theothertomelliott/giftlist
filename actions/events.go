@@ -102,7 +102,7 @@ func (v EventsResource) Show(c buffalo.Context) error {
 	// Make event available inside the html template
 	c.Set("event", event)
 
-	peopleList, err := loadPeopleForEvent(tx, event)
+	peopleList, err := loadPeopleForEvent(tx, getCurrentUserID(c), event)
 	if err != nil {
 		return errors.WithStack(err)
 	}
