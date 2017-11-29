@@ -38,7 +38,7 @@ func (p PersonForEvent) HasBudget() bool {
 func (p PersonForEvent) TotalSpent() int64 {
 	var total int64 = 0
 	for _, gift := range p.Gifts {
-		total += gift.Price
+		total += gift.PriceInt
 	}
 	return total
 }
