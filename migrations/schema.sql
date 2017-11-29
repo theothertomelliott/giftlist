@@ -59,7 +59,8 @@ CREATE TABLE events (
     name character varying(255) NOT NULL,
     date timestamp without time zone NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    user_id uuid NOT NULL
 );
 
 
@@ -91,7 +92,8 @@ CREATE TABLE people (
     id uuid NOT NULL,
     name character varying(255) NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    user_id uuid NOT NULL
 );
 
 

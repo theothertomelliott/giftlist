@@ -1,0 +1,2 @@
+drop_column("events", "user_id")
+drop_column("people", "user_id")

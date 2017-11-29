@@ -5,6 +5,7 @@ import (
 	"github.com/gobuffalo/buffalo"
 	"github.com/markbates/pop"
 	"github.com/pkg/errors"
+	uuid "github.com/satori/go.uuid"
 )
 
 func UsersNew(c buffalo.Context) error {
@@ -63,4 +64,11 @@ func Authorize(next buffalo.Handler) buffalo.Handler {
 		}
 		return next(c)
 	}
+}
+
+func getCurrentUserID(c buffalo.Context) uuid.UUID {
+	if uid := c.Session().Get("current_user_id"); uid != nil {
+		return uid.(uuid.UUID)
+	}
+	return uuid.Nil
 }

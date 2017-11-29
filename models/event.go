@@ -16,6 +16,7 @@ type Event struct {
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
 	Name      string    `json:"name" db:"name"`
 	Date      time.Time `json:"date" db:"date"`
+	UserID    uuid.UUID `json:"user_id" db:"user_id"`
 }
 
 // String is not required by pop and may be deleted

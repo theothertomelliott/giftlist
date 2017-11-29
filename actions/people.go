@@ -37,7 +37,7 @@ func (v PeopleResource) List(c buffalo.Context) error {
 	q := tx.PaginateFromParams(c.Params())
 
 	// Retrieve all Persons from the DB
-	if err := q.All(people); err != nil {
+	if err := q.Where("user_id = ?", getCurrentUserID(c)).All(people); err != nil {
 		return errors.WithStack(err)
 	}
 
@@ -64,6 +64,11 @@ func (v PeopleResource) Show(c buffalo.Context) error {
 		return c.Error(404, err)
 	}
 
+	if person.UserID != getCurrentUserID(c) {
+		c.Flash().Add("danger", "You are not authorized to view that page")
+		return c.Redirect(302, "/")
+	}
+
 	// Make person available inside the html template
 	c.Set("person", person)
 
@@ -73,8 +78,11 @@ func (v PeopleResource) Show(c buffalo.Context) error {
 // New renders the form for creating a new Person.
 // This function is mapped to the path GET /people/new
 func (v PeopleResource) New(c buffalo.Context) error {
+
 	// Make person available inside the html template
-	c.Set("person", &models.Person{})
+	c.Set("person", &models.Person{
+		UserID: getCurrentUserID(c),
+	})
 
 	return c.Render(200, r.HTML("people/new.html"))
 }
@@ -88,6 +96,11 @@ func (v PeopleResource) Create(c buffalo.Context) error {
 	// Bind person to the html form elements
 	if err := c.Bind(person); err != nil {
 		return errors.WithStack(err)
+	}
+
+	if person.UserID != getCurrentUserID(c) {
+		c.Flash().Add("danger", "You are not authorized to perform that action")
+		return c.Redirect(302, "/")
 	}
 
 	// Get the DB connection from the context
@@ -130,6 +143,11 @@ func (v PeopleResource) Edit(c buffalo.Context) error {
 		return c.Error(404, err)
 	}
 
+	if person.UserID != getCurrentUserID(c) {
+		c.Flash().Add("danger", "You are not authorized to view that page")
+		return c.Redirect(302, "/")
+	}
+
 	// Make person available inside the html template
 	c.Set("person", person)
 	return c.Render(200, r.HTML("people/edit.html"))
@@ -146,6 +164,11 @@ func (v PeopleResource) Update(c buffalo.Context) error {
 
 	if err := tx.Find(person, c.Param("person_id")); err != nil {
 		return c.Error(404, err)
+	}
+
+	if person.UserID != getCurrentUserID(c) {
+		c.Flash().Add("danger", "You are not authorized to perform that action")
+		return c.Redirect(302, "/")
 	}
 
 	// Bind Person to the html form elements
@@ -189,6 +212,11 @@ func (v PeopleResource) Destroy(c buffalo.Context) error {
 	// To find the Person the parameter person_id is used.
 	if err := tx.Find(person, c.Param("person_id")); err != nil {
 		return c.Error(404, err)
+	}
+
+	if person.UserID != getCurrentUserID(c) {
+		c.Flash().Add("danger", "You are not authorized to perform that action")
+		return c.Redirect(302, "/")
 	}
 
 	if err := tx.Destroy(person); err != nil {

@@ -1,0 +1,2 @@
+add_column("events", "user_id", "uuid", {})
+add_column("people", "user_id", "uuid", {})

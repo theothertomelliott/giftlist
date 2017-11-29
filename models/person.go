@@ -15,6 +15,7 @@ type Person struct {
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
 	Name      string    `json:"name" db:"name"`
+	UserID    uuid.UUID `json:"user_id" db:"user_id"`
 }
 
 // String is not required by pop and may be deleted

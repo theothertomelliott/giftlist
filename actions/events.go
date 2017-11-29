@@ -62,9 +62,8 @@ func (v EventsResource) List(c buffalo.Context) error {
 	// Paginate results. Params "page" and "per_page" control pagination.
 	// Default values are "page=1" and "per_page=20".
 	q := tx.PaginateFromParams(c.Params())
-
 	// Retrieve all Events from the DB
-	if err := q.All(events); err != nil {
+	if err := q.Where("user_id = ?", getCurrentUserID(c)).All(events); err != nil {
 		return errors.WithStack(err)
 	}
 
@@ -90,6 +89,12 @@ func (v EventsResource) Show(c buffalo.Context) error {
 	if err := tx.Find(event, c.Param("event_id")); err != nil {
 		return c.Error(404, err)
 	}
+
+	if event.UserID != getCurrentUserID(c) {
+		c.Flash().Add("danger", "You are not authorized to view that page")
+		return c.Redirect(302, "/")
+	}
+
 	// Make event available inside the html template
 	c.Set("event", event)
 
@@ -106,7 +111,9 @@ func (v EventsResource) Show(c buffalo.Context) error {
 // This function is mapped to the path GET /events/new
 func (v EventsResource) New(c buffalo.Context) error {
 	// Make event available inside the html template
-	c.Set("event", &models.Event{})
+	c.Set("event", &models.Event{
+		UserID: getCurrentUserID(c),
+	})
 
 	return c.Render(200, r.HTML("events/new.html"))
 }
@@ -120,6 +127,11 @@ func (v EventsResource) Create(c buffalo.Context) error {
 	// Bind event to the html form elements
 	if err := c.Bind(event); err != nil {
 		return errors.WithStack(err)
+	}
+
+	if event.UserID != getCurrentUserID(c) {
+		c.Flash().Add("danger", "You are not authorized to perform that action")
+		return c.Redirect(302, "/")
 	}
 
 	// Get the DB connection from the context
@@ -163,6 +175,11 @@ func (v EventsResource) Edit(c buffalo.Context) error {
 		return c.Error(404, err)
 	}
 
+	if event.UserID != getCurrentUserID(c) {
+		c.Flash().Add("danger", "You are not authorized to view that page")
+		return c.Redirect(302, "/")
+	}
+
 	// Make event available inside the html template
 	c.Set("event", event)
 	return c.Render(200, r.HTML("events/edit.html"))
@@ -184,6 +201,11 @@ func (v EventsResource) Update(c buffalo.Context) error {
 	// Bind Event to the html form elements
 	if err := c.Bind(event); err != nil {
 		return errors.WithStack(err)
+	}
+
+	if event.UserID != getCurrentUserID(c) {
+		c.Flash().Add("danger", "You are not authorized to perform that action")
+		return c.Redirect(302, "/")
 	}
 
 	verrs, err := tx.ValidateAndUpdate(event)
@@ -222,6 +244,11 @@ func (v EventsResource) Destroy(c buffalo.Context) error {
 	// To find the Event the parameter event_id is used.
 	if err := tx.Find(event, c.Param("event_id")); err != nil {
 		return c.Error(404, err)
+	}
+
+	if event.UserID != getCurrentUserID(c) {
+		c.Flash().Add("danger", "You are not authorized to perform that action")
+		return c.Redirect(302, "/")
 	}
 
 	if err := tx.Destroy(event); err != nil {
