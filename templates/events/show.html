@@ -43,7 +43,6 @@
   <thead>
     <tr class="active">
     <th>Name</th>
-    <th>Url</th>
     <th>Status</th>
     <th class="text-right">Price</th>
     <th class="text-right">
@@ -65,9 +64,12 @@
       <tr>
       <td>
         <a id="gift-<%= gift.ID %>" name="gift-<%= gift.ID %>"></a>
-        <%= gift.Name %>
+        <%= if (gift.Url != "") { %>
+          <a href="<%= gift.Url %>"><%= gift.Name %></a>
+        <% } else { %>
+          <%= gift.Name %>
+        <% } %>
       </td>
-        <td><%= gift.Url %></td>
         <td><%= gift.Status %></td>
         <td class="text-right"><%= gift.Price %></td>
         <td>
@@ -83,14 +85,12 @@
   <tfoot>
     <tr>
       <td>&nbsp;</td>
-      <td>&nbsp;</td>
       <th id="total">Total :</th>
       <td class="text-right"><%= person.TotalSpent() %></td>
       <td>&nbsp;</td>      
     </tr>
     <%= if (person.HasBudget()) { %>
       <tr>
-        <td>&nbsp;</td>
         <td>&nbsp;</td>
         <th id="total">Budget :</th>
         <td class="text-right"> <%= person.Budget.Maximum %></td>
@@ -103,14 +103,12 @@
       </tr>
       <tr>
         <td>&nbsp;</td>
-        <td>&nbsp;</td>
         <th id="total">Remaining :</th>
         <td class="text-right"> <%= person.Remaining() %></td>
         <td>&nbsp;</td>      
       </tr>
     <% } else { %>
       <tr class="active">
-          <td>&nbsp;</td>
           <td>&nbsp;</td>
           <td>&nbsp;</td>
           <td class="text-right">
