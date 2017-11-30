@@ -1,4 +1,4 @@
 <%= f.InputTag("Maximum") %>
-<%= f.SelectTag("PersonID", {options: people}) %>
-<%= f.SelectTag("EventID", {options: events}) %>
+<input type="hidden" name="PersonID" value="<%= budget.PersonID %>"/>
+<input type="hidden" name="EventID" value="<%= budget.EventID %>"/>
 <button class="btn btn-success" role="submit">Save</button>

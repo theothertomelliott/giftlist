@@ -106,20 +106,6 @@ func (v GiftsResource) New(c buffalo.Context) error {
 	// Make gift available inside the html template
 	c.Set("gift", gift)
 
-	// Get a db connection and make the people map available
-	tx := c.Value("tx").(*pop.Connection)
-	people, err := buildPersonMap(tx)
-	if err != nil {
-		return c.Error(404, err)
-	}
-	c.Set("people", people)
-	// Make the events map available to templates
-	events, err := buildEventsMap(tx)
-	if err != nil {
-		return c.Error(404, err)
-	}
-	c.Set("events", events)
-
 	return c.Render(200, r.HTML("gifts/new.html"))
 }
 
@@ -180,19 +166,6 @@ func (v GiftsResource) Edit(c buffalo.Context) error {
 
 	// Make gift available inside the html template
 	c.Set("gift", gift)
-
-	// Make the people map available to templates
-	people, err := buildPersonMap(tx)
-	if err != nil {
-		return c.Error(404, err)
-	}
-	c.Set("people", people)
-	// Make the events map available to templates
-	events, err := buildEventsMap(tx)
-	if err != nil {
-		return c.Error(404, err)
-	}
-	c.Set("events", events)
 
 	return c.Render(200, r.HTML("gifts/edit.html"))
 }

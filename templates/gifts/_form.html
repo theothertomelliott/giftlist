@@ -2,6 +2,6 @@
 <%= f.InputTag("Price") %>
 <%= f.InputTag("Url") %>
 <%= f.SelectTag("Status", {options: {"Bookmarked": "BOOKMARKED", "Ordered": "ORDERED", "Delivered": "DELIVERED", "Wrapped": "WRAPPED", "Bought in store": "BOUGHT IN STORE"}}) %>
-<%= f.SelectTag("PersonID", {options: people}) %>
-<%= f.SelectTag("EventID", {options: events}) %>
+<input type="hidden" name="PersonID" value="<%= gift.PersonID %>"/>
+<input type="hidden" name="EventID" value="<%= gift.EventID %>"/>
 <button class="btn btn-success" role="submit">Save</button>
