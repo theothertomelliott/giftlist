@@ -42,9 +42,13 @@ func (g Gifts) String() string {
 // Validate gets run every time you call a "pop.Validate*" (pop.ValidateAndSave, pop.ValidateAndCreate, pop.ValidateAndUpdate) method.
 // This method is not required and may be deleted.
 func (g *Gift) Validate(tx *pop.Connection) (*validate.Errors, error) {
+	var v []validate.Validator
+	v = append(v, &validators.StringIsPresent{Field: g.Name, Name: "Name"})
+	if g.Url != "" {
+		v = append(v, &validators.URLIsPresent{Field: g.Url, Name: "Url"})
+	}
 	return validate.Validate(
-		&validators.StringIsPresent{Field: g.Name, Name: "Name"},
-		&validators.StringIsPresent{Field: g.Url, Name: "Url"},
+		v...,
 	), nil
 }
 
