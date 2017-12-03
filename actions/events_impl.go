@@ -45,6 +45,7 @@ func loadPeopleForEvent(tx *pop.Connection, currentUser uuid.UUID, event *models
 		peopleMap[gift.PersonID] = person
 	}
 	for _, budget := range budgets {
+		budget := budget
 		person := peopleMap[budget.PersonID]
 		person.Budget = &budget
 		peopleMap[budget.PersonID] = person
