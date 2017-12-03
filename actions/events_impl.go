@@ -1,6 +1,8 @@
 package actions
 
 import (
+	"sort"
+
 	"github.com/markbates/pop"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
@@ -53,5 +55,6 @@ func loadPeopleForEvent(tx *pop.Connection, currentUser uuid.UUID, event *models
 		output = append(output, personForEvent)
 	}
 
+	sort.SliceStable(output, func(i, j int) bool { return output[i].CreatedAt.Before(output[j].CreatedAt) })
 	return output, nil
 }
