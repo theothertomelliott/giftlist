@@ -35,6 +35,36 @@
     </div><!-- /.container-fluid -->
   </nav>
 
+  <div class="progress">
+    <div  class="progress-bar <%= 
+            if (people.TotalSpentInt() > people.TotalBudgetInt()) { 
+              %>progress-bar-danger<%
+            } else { 
+              %>progress-bar-success<% 
+            }
+          %>" 
+          role="progressbar" 
+          aria-valuenow="<%= people.TotalSpent() %>" 
+          aria-valuemin="0" 
+          aria-valuemax="<%= people.TotalBudget() %>" 
+          style="width: <%= percentSpent %>%;"
+    >
+      <%= people.TotalSpent() %> spent of <%= people.TotalBudget() %>
+    </div>
+  </div>
+
+  <div class="progress">
+      <div  class="progress-bar" 
+            role="progressbar" 
+            aria-valuenow="<%= people.TotalWithGifts() %>" 
+            aria-valuemin="0" 
+            aria-valuemax="<%= len(people) %>" 
+            style="width: <%= percentWithGifts %>%;"
+      >
+        <%= len(people) - people.TotalWithGifts() %> left to buy for.
+      </div>
+    </div>
+
 <%= for (person) in people { %>
 <a id="person-<%= person.ID %>" name="person-<%= person.ID %>"></a>
 <h1><%= person.Name %></h1>

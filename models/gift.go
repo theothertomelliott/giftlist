@@ -33,10 +33,24 @@ func (g Gift) String() string {
 // Gifts is not required by pop and may be deleted
 type Gifts []Gift
 
+func (g Gifts) HasGiftBought() bool {
+	for _, gift := range g {
+		if gift.Bought() {
+			return true
+		}
+	}
+	return false
+}
+
 // String is not required by pop and may be deleted
 func (g Gifts) String() string {
 	jg, _ := json.Marshal(g)
 	return string(jg)
+}
+
+// Bought indicates that this gift has been purchased
+func (g Gift) Bought() bool {
+	return g.Status != "BOOKMARKED"
 }
 
 // Validate gets run every time you call a "pop.Validate*" (pop.ValidateAndSave, pop.ValidateAndCreate, pop.ValidateAndUpdate) method.

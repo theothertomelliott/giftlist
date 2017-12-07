@@ -25,6 +25,69 @@ type EventsResource struct {
 }
 
 type PeopleForEvent []PersonForEvent
+
+func (p PeopleForEvent) TotalWithGifts() int {
+	var count int
+	for _, person := range p {
+		if person.Gifts.HasGiftBought() {
+			count++
+		}
+	}
+	return count
+}
+
+func (p PeopleForEvent) TotalSpent() string {
+	var spent int64
+	for _, person := range p {
+		spent += person.totalSpentInt()
+	}
+	return models.RenderMoney(spent)
+}
+
+func (p PeopleForEvent) TotalSpentInt() int64 {
+	var spent int64
+	for _, person := range p {
+		spent += person.totalSpentInt()
+	}
+	return spent
+}
+
+func (p PeopleForEvent) TotalBudget() string {
+	var budget int64
+	for _, person := range p {
+		if person.Budget != nil {
+			budget += person.Budget.MaximumInt
+		}
+	}
+	return models.RenderMoney(budget)
+}
+
+func (p PeopleForEvent) TotalBudgetInt() int64 {
+	var budget int64
+	for _, person := range p {
+		if person.Budget != nil {
+			budget += person.Budget.MaximumInt
+		}
+	}
+	return budget
+}
+
+func (p PeopleForEvent) Remaining() string {
+	var remaining int64
+	for _, person := range p {
+		remaining += person.remainingInt()
+	}
+	return models.RenderMoney(remaining)
+}
+
+func (p PeopleForEvent) RemainingInt() int64 {
+	var remaining int64
+	for _, person := range p {
+		remaining += person.remainingInt()
+	}
+	return remaining
+}
+
 type PersonForEvent struct {
 	models.Person
 	Budget *models.Budget
@@ -36,7 +99,7 @@ func (p PersonForEvent) HasBudget() bool {
 }
 
 func (p PersonForEvent) totalSpentInt() int64 {
-	var total int64 = 0
+	var total int64
 	for _, gift := range p.Gifts {
 		total += gift.PriceInt
 	}
@@ -47,12 +110,16 @@ func (p PersonForEvent) TotalSpent() string {
 	return models.RenderMoney(p.totalSpentInt())
 }
 
-func (p PersonForEvent) Remaining() string {
+func (p PersonForEvent) remainingInt() int64 {
 	if p.Budget == nil {
-		return "0.00"
+		return 0
 	}
 
-	return models.RenderMoney(p.Budget.MaximumInt - p.totalSpentInt())
+	return p.Budget.MaximumInt - p.totalSpentInt()
+}
+
+func (p PersonForEvent) Remaining() string {
+	return models.RenderMoney(p.remainingInt())
 }
 
 // List gets all Events. This function is mapped to the path
@@ -107,6 +174,16 @@ func (v EventsResource) Show(c buffalo.Context) error {
 		return errors.WithStack(err)
 	}
 	c.Set("people", peopleList)
+	fractionSpent := float64(peopleList.TotalSpentInt()) / float64(peopleList.TotalBudgetInt())
+	if fractionSpent > 1 {
+		fractionSpent = 1
+	}
+	c.Set("percentSpent", fractionSpent*100)
+	fractionWithGifts := float64(peopleList.TotalWithGifts()) / float64(len(peopleList))
+	if fractionWithGifts > 1 {
+		fractionWithGifts = 1
+	}
+	c.Set("percentWithGifts", fractionWithGifts*100)
 
 	return c.Render(200, r.HTML("events/show.html"))
 }
